@@ -46,6 +46,7 @@ public class LoginFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public LoginFrame() {
+		setTitle("Laundry KevAsh");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -86,7 +87,10 @@ public class LoginFrame extends JFrame {
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (User.login(tfUsername.getText(), tfPassword.getText())) {
+					dispose();
 					JOptionPane.showMessageDialog(null,"Selamat Anda Berhasil Login");
+					MainFrame mf = new MainFrame();
+					mf.setVisible(true);
 				}else {
 					JOptionPane.showMessageDialog(null,"Maaf Data Yang Anda Masukkan Salah");
 				}
@@ -96,10 +100,10 @@ public class LoginFrame extends JFrame {
 		btnLogin.setBounds(153, 208, 121, 33);
 		contentPane.add(btnLogin);
 		
-		JLabel lblBajuKotorCuci = new JLabel("Baju kotor? cuci dong");
-		lblBajuKotorCuci.setHorizontalAlignment(SwingConstants.CENTER);
-		lblBajuKotorCuci.setFont(new Font("SansSerif", Font.PLAIN, 12));
-		lblBajuKotorCuci.setBounds(10, 44, 416, 25);
-		contentPane.add(lblBajuKotorCuci);
+		JLabel lblDesc = new JLabel("Ingin Baju Bersih Dengan Cepat?");
+		lblDesc.setHorizontalAlignment(SwingConstants.CENTER);
+		lblDesc.setFont(new Font("SansSerif", Font.PLAIN, 12));
+		lblDesc.setBounds(10, 44, 416, 25);
+		contentPane.add(lblDesc);
 	}
 }

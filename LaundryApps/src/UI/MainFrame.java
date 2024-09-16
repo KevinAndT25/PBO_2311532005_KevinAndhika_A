@@ -9,6 +9,8 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class MainFrame extends JFrame {
 
@@ -80,6 +82,13 @@ public class MainFrame extends JFrame {
 		contentPane.add(btnProfile);
 		
 		JButton btnBack = new JButton("Back");
+		btnBack.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				LoginFrame lf = new LoginFrame();
+				lf.setVisible(true);
+				dispose();
+			}
+		});
 		btnBack.setFont(new Font("SansSerif", Font.BOLD, 14));
 		btnBack.setBounds(305, 220, 121, 33);
 		contentPane.add(btnBack);

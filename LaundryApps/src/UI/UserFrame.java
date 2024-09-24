@@ -130,6 +130,10 @@ public class UserFrame extends JFrame {
 		contentPane.add(btnSave);
 		
 		JButton btnCancel = new JButton("Cancel");
+		btnCancel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		btnCancel.setBackground(new Color(192, 192, 192));
 		btnCancel.setFont(new Font("SansSerif", Font.BOLD, 12));
 		btnCancel.setBounds(351, 156, 75, 25);

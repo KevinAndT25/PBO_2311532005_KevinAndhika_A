@@ -10,28 +10,28 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import Model.Customer;
+import Model.Service;
 import config.Database;
 
-public class CustomerRepo implements CustomerDAO{
+public class ServiceRepo implements ServiceDAO{
 	private Connection connection;
-	final String insert = "INSERT INTO customer (nama, alamat, noHp) VALUES (?,?,?);";
-	final String select = "SELECT * FROM customer;";
-	final String delete = "DELETE FROM customer WHERE id=?;";
-	final String update = "UPDATE customer SET nama=?, alamat=?, noHp=? WHERE id=?;";
+	final String insert = "INSERT INTO service (jenis, harga, status) VALUES (?,?,?);";
+	final String select = "SELECT * FROM service;";
+	final String delete = "DELETE FROM service WHERE id=?;";
+	final String update = "UPDATE service SET jenis=?, harga=?, status=? WHERE id=?;";
 	
-	public CustomerRepo() {
+	public ServiceRepo() {
 		connection = Database.koneksi();
 	}
 	
 	@Override
-	public void save(Customer cus) {
+	public void save(Service srv) {
 		PreparedStatement st = null;
 		try {
 			st = connection.prepareStatement(insert);
-			st.setString(1, cus.getNama());
-			st.setString(2, cus.getAlamat());
-			st.setString(3, cus.getNoHp());
+			st.setString(1, srv.getJenis());
+			st.setString(2, srv.getHarga());
+			st.setString(3, srv.getStatus());
 			st.executeUpdate();
 		}catch(SQLException e) {
 			e.printStackTrace();
@@ -44,19 +44,19 @@ public class CustomerRepo implements CustomerDAO{
 		}
 	}
 	@Override
-	public List<Customer> show(){
-		List<Customer> ls = null;
+	public List<Service> show(){
+		List<Service> ls = null;
 		try {
-			ls = new ArrayList<Customer>();
+			ls = new ArrayList<Service>();
 			Statement st = connection.createStatement();
 			ResultSet rs = st.executeQuery(select);
 			while(rs.next()) {
-				Customer cus = new Customer();
-				cus.setId(rs.getString("id"));
-				cus.setNama(rs.getString("nama"));
-				cus.setAlamat(rs.getString("alamat"));
-				cus.setNoHp(rs.getString("noHp"));
-				ls.add(cus);
+				Service srv = new Service();
+				srv.setId(rs.getString("id"));
+				srv.setJenis(rs.getString("jenis"));
+				srv.setHarga(rs.getString("harga"));
+				srv.setStatus(rs.getString("status"));
+				ls.add(srv);
 			}
 		}catch(SQLException e) {
 			Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, e);
@@ -64,14 +64,14 @@ public class CustomerRepo implements CustomerDAO{
 		return ls;
 	}
 	@Override
-	public void update(Customer cus) {
+	public void update(Service srv) {
 		PreparedStatement st = null;
 		try {
 			st = connection.prepareStatement(update);
-			st.setString(1,  cus.getNama());;
-			st.setString(2,  cus.getAlamat());;
-			st.setString(3,  cus.getNoHp());;
-			st.setString(4,  cus.getId());;
+			st.setString(1,  srv.getJenis());;
+			st.setString(2,  srv.getHarga());;
+			st.setString(3,  srv.getStatus());;
+			st.setString(4,  srv.getId());;
 			st.executeUpdate();
 		}catch(SQLException e) {
 			e.printStackTrace();

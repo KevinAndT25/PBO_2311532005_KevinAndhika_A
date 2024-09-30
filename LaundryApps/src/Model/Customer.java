@@ -31,7 +31,7 @@ public class Customer {
 		return noHp;
 	}
 
-	public void setNoHp(String hp) {
+	public void setNoHp(String noHp) {
 		this.noHp = noHp;
 	}
 	

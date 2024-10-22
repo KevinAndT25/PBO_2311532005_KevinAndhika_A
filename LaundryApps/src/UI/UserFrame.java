@@ -126,17 +126,20 @@ public class UserFrame extends JFrame {
 			}
 		});
 		btnSave.setFont(new Font("SansSerif", Font.BOLD, 12));
-		btnSave.setBounds(112, 156, 75, 25);
+		btnSave.setBounds(193, 156, 75, 25);
 		contentPane.add(btnSave);
 		
-		JButton btnCancel = new JButton("Cancel");
+		JButton btnCancel = new JButton("Back");
 		btnCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				MainFrame mf = new MainFrame();
+				mf.setVisible(true);
+				dispose();
 			}
 		});
 		btnCancel.setBackground(new Color(192, 192, 192));
 		btnCancel.setFont(new Font("SansSerif", Font.BOLD, 12));
-		btnCancel.setBounds(351, 156, 75, 25);
+		btnCancel.setBounds(10, 156, 75, 25);
 		contentPane.add(btnCancel);
 		
 		JButton btnDelete = new JButton("Delete");
@@ -153,7 +156,7 @@ public class UserFrame extends JFrame {
 		});
 		btnDelete.setBackground(new Color(255, 0, 0));
 		btnDelete.setFont(new Font("SansSerif", Font.BOLD, 12));
-		btnDelete.setBounds(270, 156, 75, 25);
+		btnDelete.setBounds(351, 156, 75, 25);
 		contentPane.add(btnDelete);
 		
 		JButton btnUpdate = new JButton("Update");
@@ -171,7 +174,7 @@ public class UserFrame extends JFrame {
 		});
 		btnUpdate.setBackground(new Color(0, 128, 255));
 		btnUpdate.setFont(new Font("SansSerif", Font.BOLD, 12));
-		btnUpdate.setBounds(191, 156, 75, 25);
+		btnUpdate.setBounds(272, 156, 75, 25);
 		contentPane.add(btnUpdate);
 		
 		JScrollPane scrollPane = new JScrollPane();

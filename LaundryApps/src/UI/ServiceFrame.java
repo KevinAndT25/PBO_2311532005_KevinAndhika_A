@@ -97,6 +97,7 @@ public class ServiceFrame extends JFrame {
 		tableServices.setBackground(Color.WHITE);
 		
 		JButton btnCreate = new JButton("Create");
+		btnCreate.setBackground(new Color(0, 255, 0));
 		btnCreate.setBounds(192, 300, 75, 25);
 		btnCreate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -114,6 +115,7 @@ public class ServiceFrame extends JFrame {
 		
 		JButton btnUpdate = new JButton("Update");
 		btnUpdate.setBounds(272, 300, 75, 25);
+		btnUpdate.setBackground(new Color(0, 128, 255));
 		btnUpdate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Service srv = new Service();
@@ -130,6 +132,7 @@ public class ServiceFrame extends JFrame {
 		contentPane.add(btnUpdate);
 		
 		JButton btnDelete = new JButton("Delete");
+		btnDelete.setBackground(new Color(255, 0, 0));
 		btnDelete.setBounds(351, 300, 75, 25);
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -184,5 +187,18 @@ public class ServiceFrame extends JFrame {
 		txtJenis.setColumns(10);
 		txtJenis.setBounds(112, 31, 314, 25);
 		contentPane.add(txtJenis);
+		
+		JButton btnBack = new JButton("Back");
+		btnBack.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				MainFrame mf = new MainFrame();
+				mf.setVisible(true);
+				dispose();
+			}
+		});
+		btnBack.setFont(new Font("SansSerif", Font.BOLD, 12));
+		btnBack.setBackground(new Color(192, 192, 192));
+		btnBack.setBounds(10, 300, 67, 25);
+		contentPane.add(btnBack);
 	}
 }

@@ -137,6 +137,7 @@ public class CustomerFrame extends JFrame {
 		tableCustomers.setFont(new Font("SansSerif", Font.PLAIN, 12));
 		
 		JButton btnSign = new JButton("Sign");
+		btnSign.setBackground(new Color(0, 255, 0));
 		btnSign.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Customer cus = new Customer();
@@ -166,6 +167,7 @@ public class CustomerFrame extends JFrame {
 			}
 		});
 		btnUpdate.setFont(new Font("SansSerif", Font.BOLD, 12));
+		btnUpdate.setBackground(new Color(0, 128, 255));
 		btnUpdate.setBounds(272, 157, 75, 25);
 		contentPane.add(btnUpdate);
 		
@@ -182,7 +184,21 @@ public class CustomerFrame extends JFrame {
 			}
 		});
 		btnDelete.setFont(new Font("SansSerif", Font.BOLD, 12));
+		btnDelete.setBackground(new Color(255, 0, 0));
 		btnDelete.setBounds(351, 157, 75, 25);
 		contentPane.add(btnDelete);
+		
+		JButton btnBack = new JButton("Back");
+		btnBack.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				MainFrame mf = new MainFrame();
+				mf.setVisible(true);
+				dispose();
+			}
+		});
+		btnBack.setFont(new Font("SansSerif", Font.BOLD, 12));
+		btnBack.setBackground(new Color(192, 192, 192));
+		btnBack.setBounds(10, 157, 75, 25);
+		contentPane.add(btnBack);
 	}
 }

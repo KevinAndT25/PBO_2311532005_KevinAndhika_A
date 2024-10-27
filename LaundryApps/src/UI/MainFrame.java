@@ -53,6 +53,13 @@ public class MainFrame extends JFrame {
 		contentPane.add(lblTitle);
 		
 		JButton btnOrder = new JButton("Order");
+		btnOrder.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				OrderFrame of = new OrderFrame();
+				of.setVisible(true);
+				dispose();
+			}
+		});
 		btnOrder.setFont(new Font("SansSerif", Font.BOLD, 14));
 		btnOrder.setBounds(10, 79, 121, 47);
 		contentPane.add(btnOrder);
@@ -62,6 +69,7 @@ public class MainFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				ServiceFrame sf = new ServiceFrame();
 				sf.setVisible(true);
+				sf.loadTable();
 				dispose();
 			}
 		});
@@ -74,6 +82,7 @@ public class MainFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				CustomerFrame cf = new CustomerFrame();
 				cf.setVisible(true);
+				cf.loadTable();
 				dispose();
 			}
 		});
@@ -86,6 +95,7 @@ public class MainFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				UserFrame uf = new UserFrame();
 				uf.setVisible(true);
+				uf.loadTable();
 				dispose();
 			}
 		});

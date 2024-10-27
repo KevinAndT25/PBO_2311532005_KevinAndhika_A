@@ -66,6 +66,17 @@ public class OrderFrame extends JFrame {
 		contentPane.add(btnDelete);
 		
 		JButton btnOrder = new JButton("Order");
+		btnOrder.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				OrderDetail odf = new OrderDetail();
+				odf.setVisible(true);
+				odf.loadTableservice();
+				odf.loadTable();
+				odf.loadDataRp();
+				odf.loadPelangan();
+				dispose();
+			}
+		});
 		btnOrder.setFont(new Font("SansSerif", Font.BOLD, 12));
 		btnOrder.setBounds(23, 91, 139, 21);
 		contentPane.add(btnOrder);
@@ -82,5 +93,17 @@ public class OrderFrame extends JFrame {
 		table.setFillsViewportHeight(true);
 		table.setBackground(Color.WHITE);
 		scrollPane.setViewportView(table);
+		
+		JButton btnBack = new JButton("Back");
+		btnBack.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				MainFrame mf = new MainFrame();
+				mf.setVisible(true);
+				dispose();
+			}
+		});
+		btnBack.setFont(new Font("SansSerif", Font.BOLD, 12));
+		btnBack.setBounds(598, 10, 110, 21);
+		contentPane.add(btnBack);
 	}
 }

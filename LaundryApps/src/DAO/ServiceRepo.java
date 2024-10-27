@@ -59,7 +59,7 @@ public class ServiceRepo implements ServiceDAO{
 				ls.add(srv);
 			}
 		}catch(SQLException e) {
-			Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, e);
+			Logger.getLogger(ServiceDAO.class.getName()).log(Level.SEVERE, null, e);
 		}
 		return ls;
 	}

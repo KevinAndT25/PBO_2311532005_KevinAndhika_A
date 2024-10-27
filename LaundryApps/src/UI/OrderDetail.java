@@ -6,9 +6,15 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import DAO.OrderDRepo;
 import DAO.ServiceRepo;
+import DAO.UserRepo;
+import Model.OrderDetailModel;
 import Model.Service;
+import Model.User;
+import table.TableOrderD;
 import table.TableService;
+import table.TableUser;
 
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
@@ -28,17 +34,20 @@ import javax.swing.JButton;
 import javax.swing.DefaultComboBoxModel;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.InputMethodListener;
-import java.awt.event.InputMethodEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeListener;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.beans.PropertyChangeEvent;
 
 public class OrderDetail extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTable tableServices;
-	private JTable table_1;
+	private JTable tableOrderDetails;
+	private JTable tableUsers;
 	private JTextField txtOrderID;
 	private JTextField txtTanggal;
 	private JTextField txtPengambilan;
@@ -46,29 +55,79 @@ public class OrderDetail extends JFrame {
 	private JTextField txtHargaKg;
 	private JTextField txtJumlah;
 	private JTextField txtTotal2;
+	private JTextField txtJenis;
+	private JComboBox<String> cbPelanggan;
 	
 	ServiceRepo srvr = new ServiceRepo();
-	List<Service> ls;
+	List<Service> ls1;
 	String id;
-	
-	public void loadTable() {
-		ls = srvr.show();
-		TableService ts = new TableService(ls);
-		tableServices.setModel(ts);;
+	public void loadTableservice() {
+		ls1 = srvr.show();
+		TableService ts1 = new TableService(ls1);
+		tableServices.setModel(ts1);;
 		tableServices.getTableHeader().setVisible(true);
 	}
-	
 	private double total(double harga, double qty) {
 		return harga * qty;
 	}
+	public double hargabagi(double harga, double qty) {
+		return harga / qty;
+	}
 	
+	OrderDRepo odr = new OrderDRepo();
+	List<OrderDetailModel> ls;
+	
+	public void reset() {
+		txtHargaKg.setText("");
+		txtJenis.setText("");
+		txtJumlah.setText("");
+		txtTotal2.setText("");
+	}
+	public void loadTable() {
+		ls = odr.show();
+		TableOrderD ts = new TableOrderD(ls);
+		tableOrderDetails.setModel(ts);;
+		tableOrderDetails.getTableHeader().setVisible(true);
+	}
+	public void loadDataRp() {
+		int total = 0;
+		for (int i = 0; i < tableOrderDetails.getRowCount(); i++) {
+		    Object value = tableOrderDetails.getValueAt(i, 3); 
+
+		    total += Integer.parseInt(value.toString());
+		}
+	    txtTotalRp.setText("Rp. " + String.valueOf(total)); 
+	}
+	
+	public void loadPelangan() {
+		String cust;
+//		for (int i = 0; i < tableUsers.getRowCount(); i++) {
+//		    Object value = tableUsers.getValueAt(i, 1); 
+//	
+//            cust = value.toString();
+//            cbPelanggan.addItem(cust); 
+//	        
+//		}
+        cust = "Kevin Andhika";
+        cbPelanggan.addItem(cust);
+//        cbPelanggan.addItem(tableUsers.getValueAt(0,1).toString());
+        
+	}
+	
+	LocalDate today = LocalDate.now();
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    String formattedDate = today.format(formatter);
+    
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					OrderDetail frame = new OrderDetail();
 					frame.setVisible(true);
+					frame.loadTableservice();
 					frame.loadTable();
+					frame.loadDataRp();
+					frame.loadPelangan();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -99,6 +158,9 @@ public class OrderDetail extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				txtHargaKg.setText(tableServices.getValueAt(tableServices.getSelectedRow(),2).toString());
+				txtJenis.setText(tableServices.getValueAt(tableServices.getSelectedRow(),1).toString());
+				txtJumlah.setText("");
+				txtTotal2.setText("");
 			}
 		});
 		tableServices.setToolTipText("");
@@ -113,12 +175,21 @@ public class OrderDetail extends JFrame {
 		scrollPane_1.setBounds(261, 418, 469, 212);
 		contentPane.add(scrollPane_1);
 		
-		table_1 = new JTable();
-		table_1.setToolTipText("");
-		table_1.setFont(new Font("SansSerif", Font.PLAIN, 12));
-		table_1.setFillsViewportHeight(true);
-		table_1.setBackground(Color.WHITE);
-		scrollPane_1.setViewportView(table_1);
+		tableOrderDetails = new JTable();
+		tableOrderDetails.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				id = tableOrderDetails.getValueAt(tableOrderDetails.getSelectedRow(),0).toString();
+				txtJenis.setText(tableOrderDetails.getValueAt(tableOrderDetails.getSelectedRow(),1).toString());
+				txtJumlah.setText(tableOrderDetails.getValueAt(tableOrderDetails.getSelectedRow(),2).toString());
+				txtTotal2.setText(tableOrderDetails.getValueAt(tableOrderDetails.getSelectedRow(),3).toString()+".0");
+			}
+		});
+		tableOrderDetails.setToolTipText("");
+		tableOrderDetails.setFont(new Font("SansSerif", Font.PLAIN, 12));
+		tableOrderDetails.setFillsViewportHeight(true);
+		tableOrderDetails.setBackground(Color.WHITE);
+		scrollPane_1.setViewportView(tableOrderDetails);
 		
 		JPanel panel = new JPanel();
 		panel.setBounds(261, 232, 469, 176);
@@ -143,18 +214,21 @@ public class OrderDetail extends JFrame {
 		panel.add(lblJumlah);
 		
 		txtJumlah = new JTextField();
+		txtJumlah.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				txtHargaKg.setText(""+hargabagi(Double.parseDouble(txtTotal2.getText()), Double.parseDouble(txtJumlah.getText())));
+			}
+		});
 		txtJumlah.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
 				if (txtJumlah.getText().isEmpty()) {
-					JOptionPane.showMessageDialog(null, "Jumlah harus berisi");
 					txtTotal2.setText("");
 				}else {
 					txtTotal2.setText(""+total(Double.parseDouble(txtHargaKg.getText()), Double.parseDouble(txtJumlah.getText())));
-					
 				}
 			}
-				
 		});
 		txtJumlah.setFont(new Font("SansSerif", Font.BOLD, 12));
 		txtJumlah.setColumns(10);
@@ -167,22 +241,60 @@ public class OrderDetail extends JFrame {
 		panel.add(lblTotal2);
 		
 		txtTotal2 = new JTextField();
+		txtTotal2.setEditable(false);
 		txtTotal2.setFont(new Font("SansSerif", Font.BOLD, 12));
 		txtTotal2.setColumns(10);
 		txtTotal2.setBounds(249, 91, 199, 25);
 		panel.add(txtTotal2);
 		
 		JButton btnSimpan2 = new JButton("Simpan");
+		btnSimpan2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				OrderDetailModel ordd = new OrderDetailModel();
+				ordd.setJenis(txtJenis.getText());
+				ordd.setQty(txtJumlah.getText());
+				ordd.setTotal(txtTotal2.getText());
+				reset();
+				odr.save(ordd);
+				loadTable();
+				loadDataRp();
+			}
+		});
 		btnSimpan2.setFont(new Font("SansSerif", Font.BOLD, 12));
 		btnSimpan2.setBounds(16, 141, 92, 25);
 		panel.add(btnSimpan2);
 		
 		JButton btnUbah2 = new JButton("Ubah");
+		btnUbah2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				OrderDetailModel ordd = new OrderDetailModel();
+				ordd.setJenis(txtJenis.getText());
+				ordd.setQty(txtJumlah.getText());
+				ordd.setTotal(txtTotal2.getText());
+				ordd.setId(id);
+				odr.update(ordd);
+				reset();
+				loadTable();
+				loadDataRp();
+			}
+		});
 		btnUbah2.setFont(new Font("SansSerif", Font.BOLD, 12));
 		btnUbah2.setBounds(117, 141, 92, 25);
 		panel.add(btnUbah2);
 		
 		JButton btnHapus2 = new JButton("Hapus");
+		btnHapus2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(id != null) {
+					odr.delete(id);
+					reset();
+					loadTable();
+					loadDataRp();
+				}else {
+					JOptionPane.showMessageDialog(null, "Silahkan pilih data yang akan di hapus");
+				}
+			}
+		});
 		btnHapus2.setFont(new Font("SansSerif", Font.BOLD, 12));
 		btnHapus2.setBounds(218, 141, 92, 25);
 		panel.add(btnHapus2);
@@ -191,6 +303,18 @@ public class OrderDetail extends JFrame {
 		btnBatal2.setFont(new Font("SansSerif", Font.BOLD, 12));
 		btnBatal2.setBounds(320, 141, 92, 25);
 		panel.add(btnBatal2);
+		
+		JLabel lblJenisLayanan = new JLabel("Jenis Layanan");
+		lblJenisLayanan.setFont(new Font("SansSerif", Font.BOLD, 12));
+		lblJenisLayanan.setBounds(249, 10, 92, 25);
+		panel.add(lblJenisLayanan);
+		
+		txtJenis = new JTextField();
+		txtJenis.setEditable(false);
+		txtJenis.setFont(new Font("SansSerif", Font.BOLD, 12));
+		txtJenis.setColumns(10);
+		txtJenis.setBounds(249, 33, 199, 25);
+		panel.add(txtJenis);
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBounds(10, 10, 241, 620);
@@ -221,6 +345,8 @@ public class OrderDetail extends JFrame {
 		panel_1.add(lblTanggal);
 		
 		txtTanggal = new JTextField();
+	    txtTanggal.setText(formattedDate);
+		txtTanggal.setEditable(false);
 		txtTanggal.setFont(new Font("SansSerif", Font.BOLD, 12));
 		txtTanggal.setColumns(10);
 		txtTanggal.setBounds(10, 193, 221, 25);
@@ -237,8 +363,7 @@ public class OrderDetail extends JFrame {
 		txtPengambilan.setBounds(10, 251, 221, 25);
 		panel_1.add(txtPengambilan);
 		
-		JComboBox cbPelanggan = new JComboBox();
-		cbPelanggan.setModel(new DefaultComboBoxModel(new String[] {"Pilih"}));
+		cbPelanggan = new JComboBox();
 		cbPelanggan.setFont(new Font("SansSerif", Font.BOLD, 12));
 		cbPelanggan.setBounds(10, 113, 221, 24);
 		panel_1.add(cbPelanggan);
@@ -278,7 +403,6 @@ public class OrderDetail extends JFrame {
 		
 		txtTotalRp = new JTextField();
 		txtTotalRp.setEditable(false);
-		txtTotalRp.setText("Rp. 10.000");
 		txtTotalRp.setFont(new Font("SansSerif", Font.BOLD, 12));
 		txtTotalRp.setColumns(10);
 		txtTotalRp.setBounds(10, 391, 221, 25);
@@ -295,6 +419,13 @@ public class OrderDetail extends JFrame {
 		panel_1.add(btnSimpan);
 		
 		JButton btnBatal = new JButton("Batal");
+		btnBatal.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				OrderFrame of = new OrderFrame();
+				of.setVisible(true);
+				dispose();
+			}
+		});
 		btnBatal.setFont(new Font("SansSerif", Font.BOLD, 12));
 		btnBatal.setBounds(125, 585, 92, 25);
 		panel_1.add(btnBatal);

@@ -59,7 +59,7 @@ public class CustomerRepo implements CustomerDAO{
 				ls.add(cus);
 			}
 		}catch(SQLException e) {
-			Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, e);
+			Logger.getLogger(CustomerDAO.class.getName()).log(Level.SEVERE, null, e);
 		}
 		return ls;
 	}

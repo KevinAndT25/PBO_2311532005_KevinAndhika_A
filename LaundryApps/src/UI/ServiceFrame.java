@@ -41,7 +41,7 @@ public class ServiceFrame extends JFrame {
 	public void reset() {
 		txtJenis.setText("");
 		txtHarga.setText("");
-		txtStatus.setText("Sedang Diproses");
+		txtStatus.setText("Tersedia");
 	}
 	public void loadTable() {
 		ls = srvr.show();
@@ -87,7 +87,6 @@ public class ServiceFrame extends JFrame {
 				id = tableServices.getValueAt(tableServices.getSelectedRow(),0).toString();
 				txtJenis.setText(tableServices.getValueAt(tableServices.getSelectedRow(),1).toString());
 				txtHarga.setText(tableServices.getValueAt(tableServices.getSelectedRow(),2).toString());
-				txtStatus.setText(tableServices.getValueAt(tableServices.getSelectedRow(),3).toString());
 			}
 		});
 		scrollPane.setViewportView(tableServices);
@@ -170,7 +169,7 @@ public class ServiceFrame extends JFrame {
 		contentPane.add(lblStatus);
 		
 		txtStatus = new JTextField();
-		txtStatus.setText("Sedang Diproses");
+		txtStatus.setText("Tersedia");
 		txtStatus.setEditable(false);
 		txtStatus.setBounds(112, 103, 314, 25);
 		txtStatus.setFont(new Font("SansSerif", Font.BOLD, 12));

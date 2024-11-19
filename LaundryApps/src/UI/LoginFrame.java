@@ -87,10 +87,10 @@ public class LoginFrame extends JFrame {
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (User.login(tfUsername.getText(), tfPassword.getText())) {
-					dispose();
 					JOptionPane.showMessageDialog(null,"Selamat Anda Berhasil Login");
 					MainFrame mf = new MainFrame();
 					mf.setVisible(true);
+					dispose();
 				}else {
 					JOptionPane.showMessageDialog(null,"Maaf Data Yang Anda Masukkan Salah");
 				}

@@ -5,45 +5,80 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import DAO.OrderRepo;
+import Model.Order;
+import table.TableOrder;
+
 import javax.swing.JLabel;
 import java.awt.Font;
-import javax.swing.SwingConstants;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.JTable;
 import java.awt.Color;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 public class OrderFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTable table;
+	private JTable tableOrders;
+	private JTextField txtTrxCount;
 
-	/**
-	 * Launch the application.
-	 */
+	OrderRepo ordr = new OrderRepo();
+	List<Order> ls;
+//	static String id = null;
+	String id;
+	
+	public void trxCount() {
+//		int tempId = 0;
+//		if (id==null) {
+//			tempId = 1;
+//		}else {
+//			tempId = Integer.parseInt(id)+1;
+//		}
+//		
+		
+//		int tempId = 1;
+//		if (tempId < 10) {
+//			txtTrxCount.setText("TRX-00"+tempId);
+//		}else if (tempId < 100) {
+//			txtTrxCount.setText("TRX-0"+tempId);
+//		}else {
+//			txtTrxCount.setText("TRX-"+tempId);
+//		}
+	}
+	
+	public void loadTableOrder() {
+		ls = ordr.show();
+		TableOrder to = new TableOrder(ls);
+		tableOrders.setModel(to);;
+		tableOrders.getTableHeader().setVisible(true);
+	}
+	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					OrderFrame frame = new OrderFrame();
 					frame.setVisible(true);
+					frame.trxCount();
+					frame.loadTableOrder();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		});
 	}
-
-	/**
-	 * Create the frame.
-	 */
+	
 	public OrderFrame() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 732, 415);
+		setBounds(100, 100, 732, 449);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -73,9 +108,23 @@ public class OrderFrame extends JFrame {
 				odf.loadTableservice();
 				odf.loadTable();
 				odf.loadDataRp();
-				odf.loadPelangan();
+				odf.trxCount();
+				
+//				OrderDRepo odr = new OrderDRepo();
+//				String lastOrderId = odr.getLastOrderIdFromDatabase(); 
+//		        String newOrderId = generateOrderID(lastOrderId); 
 				dispose();
 			}
+//			private String generateOrderID (String lastOrderId) {
+//				int idNumber;
+//				if (lastOrderId == null || lastOrderId.length() <4) {
+//					idNumber = 1;
+//				} else {
+//					idNumber = Integer.parseInt(lastOrderId.substring(4));
+//					idNumber++7
+//					return String.format("TRX-406d", idNumber);
+//				}
+//			}
 		});
 		btnOrder.setFont(new Font("SansSerif", Font.BOLD, 12));
 		btnOrder.setBounds(23, 91, 139, 21);
@@ -87,12 +136,12 @@ public class OrderFrame extends JFrame {
 		scrollPane.setBounds(10, 119, 698, 254);
 		contentPane.add(scrollPane);
 		
-		table = new JTable();
-		table.setToolTipText("");
-		table.setFont(new Font("SansSerif", Font.PLAIN, 12));
-		table.setFillsViewportHeight(true);
-		table.setBackground(Color.WHITE);
-		scrollPane.setViewportView(table);
+		tableOrders = new JTable();
+		tableOrders.setToolTipText("");
+		tableOrders.setFont(new Font("SansSerif", Font.PLAIN, 12));
+		tableOrders.setFillsViewportHeight(true);
+		tableOrders.setBackground(Color.WHITE);
+		scrollPane.setViewportView(tableOrders);
 		
 		JButton btnBack = new JButton("Back");
 		btnBack.addActionListener(new ActionListener() {
@@ -103,7 +152,15 @@ public class OrderFrame extends JFrame {
 			}
 		});
 		btnBack.setFont(new Font("SansSerif", Font.BOLD, 12));
-		btnBack.setBounds(598, 10, 110, 21);
+		btnBack.setBounds(598, 383, 110, 21);
 		contentPane.add(btnBack);
+		
+		txtTrxCount = new JTextField();
+		txtTrxCount.setHorizontalAlignment(SwingConstants.CENTER);
+		txtTrxCount.setFont(new Font("SansSerif", Font.BOLD, 25));
+		txtTrxCount.setEditable(false);
+		txtTrxCount.setColumns(10);
+		txtTrxCount.setBounds(478, 10, 230, 50);
+		contentPane.add(txtTrxCount);
 	}
 }

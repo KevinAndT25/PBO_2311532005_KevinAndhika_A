@@ -7,14 +7,14 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import DAO.OrderDRepo;
+import DAO.OrderRepo;
 import DAO.ServiceRepo;
-import DAO.UserRepo;
+
 import Model.OrderDetailModel;
 import Model.Service;
-import Model.User;
+import Model.Order;
 import table.TableOrderD;
 import table.TableService;
-import table.TableUser;
 
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
@@ -36,10 +36,12 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.beans.PropertyChangeListener;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.beans.PropertyChangeEvent;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 public class OrderDetail extends JFrame {
 
@@ -47,7 +49,6 @@ public class OrderDetail extends JFrame {
 	private JPanel contentPane;
 	private JTable tableServices;
 	private JTable tableOrderDetails;
-	private JTable tableUsers;
 	private JTextField txtOrderID;
 	private JTextField txtTanggal;
 	private JTextField txtPengambilan;
@@ -56,11 +57,12 @@ public class OrderDetail extends JFrame {
 	private JTextField txtJumlah;
 	private JTextField txtTotal2;
 	private JTextField txtJenis;
-	private JComboBox<String> cbPelanggan;
+	public JComboBox<String> cbPelanggan;
 	
 	ServiceRepo srvr = new ServiceRepo();
 	List<Service> ls1;
 	String id;
+	
 	public void loadTableservice() {
 		ls1 = srvr.show();
 		TableService ts1 = new TableService(ls1);
@@ -77,17 +79,17 @@ public class OrderDetail extends JFrame {
 	OrderDRepo odr = new OrderDRepo();
 	List<OrderDetailModel> ls;
 	
-	public void reset() {
-		txtHargaKg.setText("");
-		txtJenis.setText("");
-		txtJumlah.setText("");
-		txtTotal2.setText("");
-	}
 	public void loadTable() {
 		ls = odr.show();
 		TableOrderD ts = new TableOrderD(ls);
 		tableOrderDetails.setModel(ts);;
 		tableOrderDetails.getTableHeader().setVisible(true);
+	}
+	public void reset() {
+		txtHargaKg.setText("");
+		txtJenis.setText("");
+		txtJumlah.setText("");
+		txtTotal2.setText("");
 	}
 	public void loadDataRp() {
 		int total = 0;
@@ -99,24 +101,38 @@ public class OrderDetail extends JFrame {
 	    txtTotalRp.setText("Rp. " + String.valueOf(total)); 
 	}
 	
-	public void loadPelangan() {
-		String cust;
-//		for (int i = 0; i < tableUsers.getRowCount(); i++) {
-//		    Object value = tableUsers.getValueAt(i, 1); 
-//	
-//            cust = value.toString();
-//            cbPelanggan.addItem(cust); 
-//	        
-//		}
-        cust = "Kevin Andhika";
-        cbPelanggan.addItem(cust);
-//        cbPelanggan.addItem(tableUsers.getValueAt(0,1).toString());
-        
+	public void onCustomerSelected(String customer) {
+		String x = customer;
+        cbPelanggan.addItem(x);
+    }
+	
+	OrderRepo ordr = new OrderRepo();
+	
+	public void trxCount() {
+		OrderFrame of = new OrderFrame();
+		String id2 = of.id;
+		int tempId = 0;
+		if (id2==null) {
+			tempId = 1;
+		}else {
+			tempId = Integer.parseInt(id2)+1;
+		}
+		
+		if (tempId < 10) {
+			txtOrderID.setText("TRX-00"+tempId);
+		}else if (tempId < 100) {
+			txtOrderID.setText("TRX-0"+tempId);
+		}else {
+			txtOrderID.setText("TRX-"+tempId);
+		}
 	}
 	
 	LocalDate today = LocalDate.now();
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd - MMMM - yyyy");
     String formattedDate = today.format(formatter);
+    
+    LocalDate dateNew = today.plusDays(7);
+    String deliveryDate = dateNew.format(formatter);
     
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -127,7 +143,7 @@ public class OrderDetail extends JFrame {
 					frame.loadTableservice();
 					frame.loadTable();
 					frame.loadDataRp();
-					frame.loadPelangan();
+					frame.trxCount();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -135,9 +151,6 @@ public class OrderDetail extends JFrame {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 */
 	public OrderDetail() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 754, 677);
@@ -300,6 +313,11 @@ public class OrderDetail extends JFrame {
 		panel.add(btnHapus2);
 		
 		JButton btnBatal2 = new JButton("Batal");
+		btnBatal2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				reset();
+			}
+		});
 		btnBatal2.setFont(new Font("SansSerif", Font.BOLD, 12));
 		btnBatal2.setBounds(320, 141, 92, 25);
 		panel.add(btnBatal2);
@@ -327,7 +345,6 @@ public class OrderDetail extends JFrame {
 		panel_1.add(lblOrderID);
 		
 		txtOrderID = new JTextField();
-		txtOrderID.setText("TRX-00001");
 		txtOrderID.setEditable(false);
 		txtOrderID.setFont(new Font("SansSerif", Font.BOLD, 12));
 		txtOrderID.setColumns(10);
@@ -358,12 +375,22 @@ public class OrderDetail extends JFrame {
 		panel_1.add(lblPengambilan);
 		
 		txtPengambilan = new JTextField();
+	    txtPengambilan.setText(deliveryDate);
 		txtPengambilan.setFont(new Font("SansSerif", Font.BOLD, 12));
 		txtPengambilan.setColumns(10);
 		txtPengambilan.setBounds(10, 251, 221, 25);
 		panel_1.add(txtPengambilan);
 		
 		cbPelanggan = new JComboBox();
+		cbPelanggan.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent e) {
+				DialogCustomer dc = new DialogCustomer();
+				dc.setVisible(true);
+				dc.loadTable();
+				dispose();
+			}
+		});
 		cbPelanggan.setFont(new Font("SansSerif", Font.BOLD, 12));
 		cbPelanggan.setBounds(10, 113, 221, 24);
 		panel_1.add(cbPelanggan);
@@ -396,7 +423,7 @@ public class OrderDetail extends JFrame {
 		panel_1.add(lblSPembayaran);
 		
 		JComboBox cbSPembayaran = new JComboBox();
-		cbSPembayaran.setModel(new DefaultComboBoxModel(new String[] {"Lunas", "Belum Dibayar"}));
+		cbSPembayaran.setModel(new DefaultComboBoxModel(new String[] {"Belum Dibayar", "Lunas"}));
 		cbSPembayaran.setFont(new Font("SansSerif", Font.BOLD, 12));
 		cbSPembayaran.setBounds(10, 508, 221, 24);
 		panel_1.add(cbSPembayaran);
@@ -414,6 +441,23 @@ public class OrderDetail extends JFrame {
 		panel_1.add(lblTotal);
 		
 		JButton btnSimpan = new JButton("Simpan");
+		btnSimpan.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Order ord = new Order();
+				ord.setNama(cbPelanggan.getSelectedItem().toString());
+				ord.setQtyTotal("10");
+				ord.setTotal(txtTotal2.getText());
+				ord.setTanggal(txtTanggal.getText());
+//				reset();
+				ordr.save(ord);
+				
+				OrderFrame of = new OrderFrame();
+				of.loadTableOrder();
+				of.setVisible(true);
+				dispose();
+				of.trxCount();
+			}
+		});
 		btnSimpan.setFont(new Font("SansSerif", Font.BOLD, 12));
 		btnSimpan.setBounds(24, 585, 92, 25);
 		panel_1.add(btnSimpan);

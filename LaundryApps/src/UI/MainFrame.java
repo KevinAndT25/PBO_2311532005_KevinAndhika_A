@@ -57,6 +57,7 @@ public class MainFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				OrderFrame of = new OrderFrame();
 				of.setVisible(true);
+				of.loadTableOrder();
 				dispose();
 			}
 		});

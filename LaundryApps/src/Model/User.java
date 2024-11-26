@@ -2,7 +2,12 @@ package Model;
 
 public class User {
 	String id, nama, username, password;
-
+	
+	public User(String uname, String pass) {
+		this.username = uname;
+		this.password = pass;
+	}
+	
 	public String getId() {
 		return id;
 	}
@@ -37,18 +42,22 @@ public class User {
 	
 	public static boolean login(String username,String password) {
 		boolean isLogin = false;
-		User user = new User();
-		user.setId("1");
-		user.setNama("Flan");
-		user.setUsername("Flan");
-		user.setPassword("12345");
-		String noSpace = username.trim();
-		
-		if((user.getUsername().equalsIgnoreCase(noSpace))&&(user.getPassword().equalsIgnoreCase(password))) {
-			isLogin = true;
-		}else {
-			isLogin = false;
-		}
+//		User user = new User();
+//		user.setId("1");
+//		user.setNama("Flan");
+//		user.setUsername("Flan");
+//		user.setPassword("12345");
+//		String noSpace = username.trim();
+//		
+//		if((user.getUsername().equalsIgnoreCase(noSpace))&&(user.getPassword().equalsIgnoreCase(password))) {
+//			isLogin = true;
+//		}else {
+//			isLogin = false;
+//		}
 		return isLogin;
+	}
+	
+	public void sayHai (String message) {
+		System.out.println(message);
 	}
 }

@@ -7,7 +7,10 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import Error.ValidationException;
 import Model.User;
+import service.LoginService;
+import util.ValidationUtil;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -55,7 +58,7 @@ public class LoginFrame extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel lblTitle = new JLabel("Login Laundry KevAsh");
+		JLabel lblTitle = new JLabel("Laundry Account Login");
 		lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTitle.setFont(new Font("Serif", Font.BOLD, 18));
 		lblTitle.setBounds(10, 10, 416, 38);
@@ -86,21 +89,44 @@ public class LoginFrame extends JFrame {
 		JButton btnLogin = new JButton("Login");
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (User.login(tfUsername.getText(), tfPassword.getText())) {
-					JOptionPane.showMessageDialog(null,"Selamat Anda Berhasil Login");
-					MainFrame mf = new MainFrame();
-					mf.setVisible(true);
-					dispose();
-				}else {
-					JOptionPane.showMessageDialog(null,"Maaf Data Yang Anda Masukkan Salah");
+				String userValue = tfUsername.getText();
+				String passValue = tfPassword.getText();
+				
+				User user = new User(userValue, passValue);
+				try {
+					ValidationUtil.validate(user);
+					LoginService loginSer = new LoginService();
+					if(loginSer.authenticate(user)) {
+						System.out.println("Login Successfull!!");
+						JOptionPane.showMessageDialog(null, "Login Successfull!!");
+						new MainFrame().setVisible(true);
+						dispose();
+					}else {
+						System.out.println("Invalid Username or Password");
+						JOptionPane.showMessageDialog(null, "Login Gagal, Invalid Username or Password.");
+					}
+				}catch (ValidationException | NullPointerException exception) {
+					System.out.println("Data Tidak Valid : " + exception.getMessage());
+					JOptionPane.showMessageDialog(null, "Login Gagal: "+ exception.getMessage());
+				}finally {
+					System.out.println("Selalu Dieksekusi");
 				}
+				
+//				if (User.login(tfUsername.getText(), tfPassword.getText())) {
+//					JOptionPane.showMessageDialog(null,"Selamat Anda Berhasil Login");
+//					MainFrame mf = new MainFrame();
+//					mf.setVisible(true);
+//					dispose();
+//				}else {
+//					JOptionPane.showMessageDialog(null,"Maaf Data Yang Anda Masukkan Salah");
+//				}
 			}
 		});
 		btnLogin.setFont(new Font("SansSerif", Font.BOLD, 14));
 		btnLogin.setBounds(153, 208, 121, 33);
 		contentPane.add(btnLogin);
 		
-		JLabel lblDesc = new JLabel("Ingin Baju Bersih Dengan Cepat?");
+		JLabel lblDesc = new JLabel("Silahkan masukkan akun yang anda miliki");
 		lblDesc.setHorizontalAlignment(SwingConstants.CENTER);
 		lblDesc.setFont(new Font("SansSerif", Font.PLAIN, 12));
 		lblDesc.setBounds(10, 44, 416, 25);

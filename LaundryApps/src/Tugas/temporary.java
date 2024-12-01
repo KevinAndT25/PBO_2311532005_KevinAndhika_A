@@ -1,14 +1,24 @@
-package UI;
+package Tugas;
 
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import Error.ValidationException;
+import Model.User;
+import service.LoginService;
+import util.ValidationUtil;
+
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class temporary extends JFrame {
 
@@ -58,6 +68,12 @@ public class temporary extends JFrame {
 		contentPane.add(tfMasukkan);
 		
 		JButton btnLogin = new JButton("Simpan");
+		btnLogin.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				tfArray.setText(tfMasukkan.getText());
+				tfMasukkan.setText("");
+			}
+		});
 		btnLogin.setFont(new Font("SansSerif", Font.BOLD, 14));
 		btnLogin.setBounds(334, 61, 92, 33);
 		contentPane.add(btnLogin);
@@ -79,6 +95,32 @@ public class temporary extends JFrame {
 		contentPane.add(tfCek);
 		
 		JButton btnCek = new JButton("Cek");
+		btnCek.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+//				int Data[] = tfMasukkan.getText();
+//				int Array = tfArray.getText();
+//				
+//				IndexCheck index = new IndexCheck(Data, Array);
+//				try {
+//					ValidationUtil.validate(user);
+//					LoginService loginSer = new LoginService();
+//					if(loginSer.authenticate(user)) {
+//						System.out.println("Login Successfull!!");
+//						JOptionPane.showMessageDialog(null, "Login Successfull!!");
+//						new MainFrame().setVisible(true);
+//						dispose();
+//					}else {
+//						System.out.println("Invalid Username or Password");
+//						JOptionPane.showMessageDialog(null, "Login Gagal, Invalid Username or Password.");
+//					}
+//				}catch (ValidationException | NullPointerException exception) {
+//					System.out.println("Data Tidak Valid : " + exception.getMessage());
+//					JOptionPane.showMessageDialog(null, "Login Gagal: "+ exception.getMessage());
+//				}finally {
+//					System.out.println("Selalu Dieksekusi");
+//				}
+			}
+		});
 		btnCek.setFont(new Font("SansSerif", Font.BOLD, 14));
 		btnCek.setBounds(334, 136, 92, 33);
 		contentPane.add(btnCek);

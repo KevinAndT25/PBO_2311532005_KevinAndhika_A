@@ -18,16 +18,30 @@ import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
-public class temporary extends JFrame {
+public class ArrayIndex extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField tfMasukkan;
 	private JTextField tfCek;
 	private JTextField tfArray;
-
+    private ArrayList<Integer> dataList;
+	private JTextField tfHasil;
+	
+	private void updateDataArea() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < dataList.size(); i++) {
+            sb.append(dataList.get(i));
+            if (i < dataList.size() - 1) {
+                sb.append(", ");
+            }
+        }
+        tfArray.setText(sb.toString());
+    }
+	
 	/**
 	 * Launch the application.
 	 */
@@ -35,7 +49,7 @@ public class temporary extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					temporary frame = new temporary();
+					ArrayIndex frame = new ArrayIndex();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -47,7 +61,9 @@ public class temporary extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public temporary() {
+	public ArrayIndex() {
+        dataList = new ArrayList<>();
+        
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -70,8 +86,18 @@ public class temporary extends JFrame {
 		JButton btnLogin = new JButton("Simpan");
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				tfArray.setText(tfMasukkan.getText());
-				tfMasukkan.setText("");
+				try {
+                    String inputText = tfMasukkan.getText();
+                    String[] numbers = inputText.split(",");
+                    dataList.clear();
+                    for (String num : numbers) {
+                        dataList.add(Integer.parseInt(num.trim()));
+                    }
+                    updateDataArea();
+                    tfMasukkan.setText("");
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(null, "Harap masukkan data berupa angka dan dipisahkan dengan koma.");
+                }
 			}
 		});
 		btnLogin.setFont(new Font("SansSerif", Font.BOLD, 14));
@@ -97,28 +123,18 @@ public class temporary extends JFrame {
 		JButton btnCek = new JButton("Cek");
 		btnCek.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-//				int Data[] = tfMasukkan.getText();
-//				int Array = tfArray.getText();
-//				
-//				IndexCheck index = new IndexCheck(Data, Array);
-//				try {
-//					ValidationUtil.validate(user);
-//					LoginService loginSer = new LoginService();
-//					if(loginSer.authenticate(user)) {
-//						System.out.println("Login Successfull!!");
-//						JOptionPane.showMessageDialog(null, "Login Successfull!!");
-//						new MainFrame().setVisible(true);
-//						dispose();
-//					}else {
-//						System.out.println("Invalid Username or Password");
-//						JOptionPane.showMessageDialog(null, "Login Gagal, Invalid Username or Password.");
-//					}
-//				}catch (ValidationException | NullPointerException exception) {
-//					System.out.println("Data Tidak Valid : " + exception.getMessage());
-//					JOptionPane.showMessageDialog(null, "Login Gagal: "+ exception.getMessage());
-//				}finally {
-//					System.out.println("Selalu Dieksekusi");
-//				}
+				try {
+                    int index = Integer.parseInt(tfCek.getText()) - 1;
+                    if (index >= 0 && index < dataList.size()) {
+                        int value = dataList.get(index);
+                        tfHasil.setText("Index ke-" + (index + 1) + " adalah " + value);
+                        tfCek.setText("");
+                    } else {
+                        tfHasil.setText("Index ke-" + (index + 1) + " berada di luar batas array.");
+                    }
+                } catch (NumberFormatException ex) {
+                    tfHasil.setText("Masukkan nilai index berupa angka");
+                }
 			}
 		});
 		btnCek.setFont(new Font("SansSerif", Font.BOLD, 14));
@@ -131,5 +147,12 @@ public class temporary extends JFrame {
 		tfArray.setColumns(10);
 		tfArray.setBounds(70, 104, 254, 25);
 		contentPane.add(tfArray);
+		
+		tfHasil = new JTextField();
+		tfHasil.setFont(new Font("SansSerif", Font.BOLD, 12));
+		tfHasil.setEditable(false);
+		tfHasil.setColumns(10);
+		tfHasil.setBounds(10, 178, 416, 75);
+		contentPane.add(tfHasil);
 	}
 }

@@ -4,15 +4,17 @@ import java.sql.*;
 import javax.swing.JOptionPane;
 
 public class Database {
-	Connection conn;
+	private static Connection connection;
+	
 	public static Connection koneksi() {
-		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/laundry_apps","root","");
-			return conn;
-		}catch(Exception e){
-			JOptionPane.showMessageDialog(null, e);
-			return null;
+		if (connection == null) {
+			try {
+				Class.forName("com.mysql.cj.jdbc.Driver");
+				connection = DriverManager.getConnection("jdbc:mysql://localhost/laundry_apps","root","");
+			} catch(Exception e){
+				JOptionPane.showMessageDialog(null, e);
+			}
 		}
+		return connection;
 	}
 }

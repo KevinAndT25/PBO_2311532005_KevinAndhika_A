@@ -8,6 +8,7 @@ import javax.swing.border.EmptyBorder;
 
 import Error.ValidationException;
 import Model.User;
+import UI.MainFrame;
 import service.LoginService;
 import util.ValidationUtil;
 
@@ -65,7 +66,7 @@ public class ArrayIndex extends JFrame {
         dataList = new ArrayList<>();
         
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 450, 336);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -154,5 +155,17 @@ public class ArrayIndex extends JFrame {
 		tfHasil.setColumns(10);
 		tfHasil.setBounds(10, 178, 416, 75);
 		contentPane.add(tfHasil);
+		
+		JButton btnKembali = new JButton("Kembali");
+		btnKembali.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				MainFrame mf = new MainFrame();
+				mf.setVisible(true);
+				dispose();
+			}
+		});
+		btnKembali.setFont(new Font("SansSerif", Font.BOLD, 14));
+		btnKembali.setBounds(173, 263, 92, 33);
+		contentPane.add(btnKembali);
 	}
 }

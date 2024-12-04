@@ -6,6 +6,9 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import Tugas.ArrayIndex;
+
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.SwingConstants;
@@ -126,6 +129,18 @@ public class MainFrame extends JFrame {
 		btnBack.setBackground(new Color(192, 192, 192));
 		btnBack.setBounds(337, 226, 89, 27);
 		contentPane.add(btnBack);
+		
+		JButton btnTugas = new JButton("Tugas");
+		btnTugas.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ArrayIndex ai = new ArrayIndex();
+				ai.setVisible(true);
+				dispose();
+			}
+		});
+		btnTugas.setFont(new Font("SansSerif", Font.BOLD, 14));
+		btnTugas.setBackground(Color.LIGHT_GRAY);
+		btnTugas.setBounds(26, 226, 89, 27);
+		contentPane.add(btnTugas);
 	}
-
 }

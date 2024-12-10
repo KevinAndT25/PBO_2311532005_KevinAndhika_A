@@ -17,6 +17,7 @@ import config.Database;
 
 public class CustomerRepo implements CustomerDAO{
 	private Connection connection;
+	private static CustomerRepo instance;
 	final String insert = "INSERT INTO customer (nama, alamat, noHp) VALUES (?,?,?);";
 	final String select = "SELECT * FROM customer;";
 	final String delete = "DELETE FROM customer WHERE id=?;";
@@ -25,6 +26,17 @@ public class CustomerRepo implements CustomerDAO{
 	public CustomerRepo() {
 		connection = Database.koneksi();
 	}
+	
+	public static CustomerRepo getInstance() {
+        if (instance == null) {
+            synchronized (CustomerRepo.class) { // Thread-safe instantiation
+                if (instance == null) {
+                    instance = new CustomerRepo();
+                }
+            }
+        }
+        return instance;
+    }
 	
 	@Override
 	public void save(Customer cus) {

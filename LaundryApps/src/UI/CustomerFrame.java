@@ -8,6 +8,7 @@ import javax.swing.border.EmptyBorder;
 
 import DAO.CustomerRepo;
 import Model.Customer;
+import Model.CustomerBuilder;
 import Model.User;
 import table.TableCustomer;
 
@@ -26,6 +27,8 @@ import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 
 public class CustomerFrame extends JFrame {
 
@@ -136,19 +139,25 @@ public class CustomerFrame extends JFrame {
 		});
 		tableCustomers.setFont(new Font("SansSerif", Font.PLAIN, 12));
 		
-		JButton btnSign = new JButton("Sign");
-		btnSign.setBackground(new Color(0, 255, 0));
-		btnSign.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				Customer cus = new Customer();
-				cus.setNama(txtName.getText());
-				cus.setAlamat(txtAddress.getText());
-				cus.setNoHp(txtNoHP.getText());
-				reset();
-				cusr.save(cus);
-				loadTable();
-			}
-		});
+		JButton btnSign = new JButton("Add");
+        btnSign.setBackground(new Color(0, 255, 0));
+        btnSign.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Customer cus = new CustomerBuilder()
+                    .setNama(txtName.getText())
+                    .setAlamat(txtAddress.getText())
+                    .setNoHp(txtNoHP.getText())
+                    .build();
+                try {
+                    cusr.save(cus);
+                    reset();
+                    loadTable();
+                } catch (Exception ex) {
+//                    Logger.getLogger(CustomerFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    JOptionPane.showMessageDialog(null, "Error saving customer: " + ex.getMessage());
+                }
+            }
+        });
 		btnSign.setFont(new Font("SansSerif", Font.BOLD, 12));
 		btnSign.setBounds(193, 157, 75, 25);
 		contentPane.add(btnSign);
@@ -156,15 +165,21 @@ public class CustomerFrame extends JFrame {
 		JButton btnUpdate = new JButton("Update");
 		btnUpdate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Customer cus = new Customer();
-				cus.setNama(txtName.getText());
-				cus.setAlamat(txtAddress.getText());
-				cus.setNoHp(txtNoHP.getText());
-				cus.setId(id);
-				cusr.update(cus);
-				reset();
-				loadTable();
-			}
+		        Customer cus = new CustomerBuilder()
+		            .setNama(txtName.getText())
+		            .setAlamat(txtAddress.getText())
+		            .setNoHp(txtNoHP.getText())
+		            .setId(id) 
+		            .build();
+		        try {
+		            cusr.update(cus);
+		            reset();
+		            loadTable();
+		        } catch (Exception ex) {
+//		            Logger.getLogger(CustomerFrame.class.getName()).log(Level.SEVERE, null, ex);
+		            JOptionPane.showMessageDialog(null, "Error updating customer: " + ex.getMessage());
+		        }
+		    }
 		});
 		btnUpdate.setFont(new Font("SansSerif", Font.BOLD, 12));
 		btnUpdate.setBackground(new Color(0, 128, 255));
@@ -174,14 +189,20 @@ public class CustomerFrame extends JFrame {
 		JButton btnDelete = new JButton("Delete");
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(id != null) {
-					cusr.delete(id);
-					reset();
-					loadTable();
-				}else {
-					JOptionPane.showMessageDialog(null, "Silahkan pilih data yang akan di hapus");
-				}
-			}
+		        if (id != null) {
+	                try {
+	                    cusr.delete(id);
+	                    reset();
+	                    loadTable();
+	                } catch (Exception ex) {
+//		                    Logger.getLogger(CustomerFrame.class.getName()).log(Level.SEVERE, null, ex);
+	                    JOptionPane.showMessageDialog(null, "Error deleting customer: " + ex.getMessage());
+	                }
+		            
+		        } else {
+		            JOptionPane.showMessageDialog(null, "Silahkan pilih data yang akan dihapus");
+		        }
+		    }
 		});
 		btnDelete.setFont(new Font("SansSerif", Font.BOLD, 12));
 		btnDelete.setBackground(new Color(255, 0, 0));

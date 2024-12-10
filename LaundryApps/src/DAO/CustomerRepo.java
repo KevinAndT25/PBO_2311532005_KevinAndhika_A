@@ -11,7 +11,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import Model.Customer;
+import Model.CustomerBuilder;
 import config.Database;
+
 
 public class CustomerRepo implements CustomerDAO{
 	private Connection connection;
@@ -44,25 +46,24 @@ public class CustomerRepo implements CustomerDAO{
 		}
 	}
 	@Override
-	public List<Customer> show(){
-		List<Customer> ls = null;
-		try {
-			ls = new ArrayList<Customer>();
-			Statement st = connection.createStatement();
-			ResultSet rs = st.executeQuery(select);
-			while(rs.next()) {
-				Customer cus = new Customer();
-				cus.setId(rs.getString("id"));
-				cus.setNama(rs.getString("nama"));
-				cus.setAlamat(rs.getString("alamat"));
-				cus.setNoHp(rs.getString("noHp"));
-				ls.add(cus);
-			}
-		}catch(SQLException e) {
-			Logger.getLogger(CustomerDAO.class.getName()).log(Level.SEVERE, null, e);
-		}
-		return ls;
-	}
+	public List<Customer> show() {
+	    List<Customer> ls = new ArrayList<>();
+	    try (Statement st = connection.createStatement(); 
+	        ResultSet rs = st.executeQuery(select)) {
+	        while (rs.next()) {
+	            Customer cus = new CustomerBuilder()
+	                .setId(rs.getString("id"))
+	                .setNama(rs.getString("nama"))
+	                .setAlamat(rs.getString("alamat"))
+	                .setNoHp(rs.getString("noHp"))
+	                .build();
+             ls.add(cus);
+	        }
+	    } catch (SQLException e) {
+	        Logger.getLogger(CustomerDAO.class.getName()).log(Level.SEVERE, null, e);
+	    }
+	    return ls;
+	}	
 	@Override
 	public void update(Customer cus) {
 		PreparedStatement st = null;

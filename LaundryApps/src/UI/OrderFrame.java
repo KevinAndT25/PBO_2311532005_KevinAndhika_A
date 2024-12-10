@@ -11,6 +11,8 @@ import Model.Order;
 import table.TableOrder;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
@@ -22,6 +24,8 @@ import javax.swing.JTable;
 import java.awt.Color;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class OrderFrame extends JFrame {
 
@@ -31,10 +35,17 @@ public class OrderFrame extends JFrame {
 	private JTextField txtTrxCount;
 
 	OrderRepo ordr = new OrderRepo();
-	List<Order> ls;
-//	static String id = null;
-	String id;
+	List<Order> order;
+	String idOrder = "";
 	
+	public void loadTableOrder() {
+		order = ordr.show();
+		TableOrder to = new TableOrder(order);
+		tableOrders.setModel(to);;
+		tableOrders.getTableHeader().setVisible(true);
+	}
+	
+//	static String id = null;
 	public void trxCount() {
 //		int tempId = 0;
 //		if (id==null) {
@@ -52,13 +63,6 @@ public class OrderFrame extends JFrame {
 //		}else {
 //			txtTrxCount.setText("TRX-"+tempId);
 //		}
-	}
-	
-	public void loadTableOrder() {
-		ls = ordr.show();
-		TableOrder to = new TableOrder(ls);
-		tableOrders.setModel(to);;
-		tableOrders.getTableHeader().setVisible(true);
 	}
 	
 	public static void main(String[] args) {
@@ -96,11 +100,20 @@ public class OrderFrame extends JFrame {
 		contentPane.add(btnCustomer);
 		
 		JButton btnDelete = new JButton("Delete");
+		btnDelete.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (idOrder != "") {
+					order.delete(idOrder);
+				}else {
+					JOptionPane.showMessageDialog(null, "Select Table Row First");
+				}
+			}
+		});
 		btnDelete.setFont(new Font("SansSerif", Font.BOLD, 12));
 		btnDelete.setBounds(478, 84, 110, 21);
 		contentPane.add(btnDelete);
 		
-		JButton btnOrder = new JButton("Order");
+		JButton btnOrder = new JButton("Buat Order");
 		btnOrder.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				OrderDetail odf = new OrderDetail();
@@ -137,6 +150,12 @@ public class OrderFrame extends JFrame {
 		contentPane.add(scrollPane);
 		
 		tableOrders = new JTable();
+		tableOrders.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				txtTrxCount.setText(tableOrders.getValueAt(tableOrders.getSelectedRow(),0).toString());
+			}
+		});
 		tableOrders.setToolTipText("");
 		tableOrders.setFont(new Font("SansSerif", Font.PLAIN, 12));
 		tableOrders.setFillsViewportHeight(true);

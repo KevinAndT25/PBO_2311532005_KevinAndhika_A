@@ -443,19 +443,28 @@ public class OrderDetail extends JFrame {
 		JButton btnSimpan = new JButton("Simpan");
 		btnSimpan.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Order ord = new Order();
-				ord.setNama(cbPelanggan.getSelectedItem().toString());
-				ord.setQtyTotal("10");
-				ord.setTotal(txtTotal2.getText());
-				ord.setTanggal(txtTanggal.getText());
-//				reset();
-				ordr.save(ord);
 				
-				OrderFrame of = new OrderFrame();
-				of.loadTableOrder();
-				of.setVisible(true);
-				dispose();
-				of.trxCount();
+				if (cbPelanggan.getSelectedItem() != null) {
+					Order ord = new Order();
+					ord.setNama(cbPelanggan.getSelectedItem().toString());
+					ord.setTanggal(txtTanggal.getText());
+					ord.setTanggalPengembalian(txtPengambilan.getText());
+					ord.setStatus(cbStatus.getSelectedItem().toString());
+					ord.setPembayaran(cbPembayaran.getSelectedItem().toString());
+					ord.setStatusPembayaran(cbSPembayaran.getSelectedItem().toString());
+					ord.setTotal(txtTotalRp.getText());
+					ord.setId(txtOrderID.getText());
+					ordr.save(ord);
+					reset();
+					
+					OrderFrame of = new OrderFrame();
+					of.loadTableOrder();
+					of.setVisible(true);
+					dispose();
+//					of.trxCount();
+				}else {
+					JOptionPane.showMessageDialog(null, "Silahkan pilih data pengguna");
+				}
 			}
 		});
 		btnSimpan.setFont(new Font("SansSerif", Font.BOLD, 12));

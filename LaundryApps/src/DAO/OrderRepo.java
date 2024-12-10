@@ -15,10 +15,12 @@ import config.Database;
 
 public class OrderRepo implements OrderDAO{
 	private Connection connection;
-	final String insert = "INSERT INTO order (nama, qtytotal, total, tanggal) VALUES (?,?,?,?);";
-	final String select = "SELECT * FROM order;";
-	final String delete = "DELETE FROM order WHERE id=?;";
-	final String update = "UPDATE order SET nama=?, qtytotal=?, total=?, tanggal=? WHERE id=?;";
+	final String insert = "INSERT INTO `order` (id, name, tanggal, tanggal_pengembalian, "
+			+ "status, pembayaran, status_pembayaran, total) VALUES (?,?,?,?,?,?,?,?);";
+	final String select = "SELECT * FROM `order`;";
+	final String delete = "DELETE FROM `order` WHERE id=?;";
+	final String update = "UPDATE `order` SET name=?, tanggal=?, tanggal_pengembalian=?, "
+			+ "status=?, pembayaran=?, status_pembayaran=?, total=? WHERE id=?;";
 	
 	public OrderRepo() {
 		connection = Database.koneksi();
@@ -29,10 +31,14 @@ public class OrderRepo implements OrderDAO{
 		PreparedStatement st = null;
 		try {
 			st = connection.prepareStatement(insert);
-			st.setString(1, ord.getNama());
-			st.setString(2, ord.getQtyTotal());
-			st.setString(3, ord.getTotal());
-			st.setString(4, ord.getTanggal());
+			st.setString(1, ord.getId());
+			st.setString(2, ord.getNama());
+			st.setString(3, ord.getTanggal());
+			st.setString(4, ord.getTanggalPengembalian());
+			st.setString(5, ord.getStatus());
+			st.setString(6, ord.getPembayaran());
+			st.setString(7, ord.getStatusPembayaran());
+			st.setString(8, ord.getTotal());
 			st.executeUpdate();
 		}catch(SQLException e) {
 			e.printStackTrace();
@@ -46,35 +52,39 @@ public class OrderRepo implements OrderDAO{
 	}
 	@Override
 	public List<Order> show(){
-		List<Order> ls3 = null;
+		List<Order> order = new ArrayList<>();
 		try {
-			ls3 = new ArrayList<Order>();
 			Statement st = connection.createStatement();
 			ResultSet rs = st.executeQuery(select);
 			while(rs.next()) {
 				Order ord = new Order();
 				ord.setId(rs.getString("id"));
-				ord.setNama(rs.getString("nama"));
-				ord.setQtyTotal(rs.getString("qtyTotal"));
-				ord.setTotal(rs.getString("total"));
+				ord.setNama(rs.getString("name"));
 				ord.setTanggal(rs.getString("tanggal"));
-				ls3.add(ord);
+				ord.setTanggalPengembalian(rs.getString("tanggal_pengembalian"));
+				ord.setStatus(rs.getString("status"));
+				ord.setPembayaran(rs.getString("pembayaran"));
+				ord.setStatusPembayaran(rs.getString("status_pembayaran"));
+				ord.setTotal(rs.getString("total"));
+				order.add(ord);
 			}
 		}catch(SQLException e) {
 			Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, e);
 		}
-		return ls3;
+		return order;
 	}
 	@Override
-	public void update(Order oddr) {
+	public void update(Order ord) {
 		PreparedStatement st = null;
 		try {
 			st = connection.prepareStatement(update);
-			st.setString(1,  oddr.getNama());
-			st.setString(2,  oddr.getQtyTotal());
-			st.setString(3,  oddr.getTotal());
-			st.setString(4,  oddr.getTanggal());
-			st.setString(5,  oddr.getId());
+			st.setString(1, ord.getNama());
+			st.setString(2, ord.getTanggal());
+			st.setString(3, ord.getTanggalPengembalian());
+			st.setString(4, ord.getStatus());
+			st.setString(5, ord.getPembayaran());
+			st.setString(6, ord.getStatusPembayaran());
+			st.setString(7, ord.getTotal());
 			st.executeUpdate();
 		}catch(SQLException e) {
 			e.printStackTrace();
